@@ -58,9 +58,7 @@ class Index extends Frontend
                     $passengerList[] = $v;
                 }
 
-
 //            }
-
 
         }
 

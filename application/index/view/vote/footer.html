@@ -25,6 +25,7 @@
     window.onload = function () {
         var ajaxurl = '{:url("index/sharedata")}';
         var urll = location.href.split('#')[0];
+        $('.peopleList').eq(1).hide();
         $.ajax({
             url: ajaxurl,
             type: "post",
