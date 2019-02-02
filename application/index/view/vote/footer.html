@@ -1,5 +1,4 @@
- 
-</div>  
+</div>
 <!----发布行程表单页面-->
 
 <!-- jQuery -->
@@ -14,15 +13,15 @@
 <script src="//layui.hcwl520.com.cn/layui/layui.js?v=201809030202"></script>
 <!--瀑布流插件-->
 <!--<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>-->
-<script src="https://static.sfc.junyiqiche.com/sf/flex.js"></script> 
+<script src="https://static.sfc.junyiqiche.com/sf/flex.js"></script>
 <!-- <script src="https://static.sfc.junyiqiche.com/sf/sf.js"></script>  -->
 
 <!-- <script src="https://static.sfc.junyiqiche.com/moment-with-locales.min.js"></script> -->
 <script src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js" type="text/javascript" charset="utf-8"></script>
 <script>
     /**
-    * 微信转发
-    */
+     * 微信转发
+     */
     window.onload = function () {
         var ajaxurl = '{:url("index/sharedata")}';
         var urll = location.href.split('#')[0];
@@ -42,15 +41,15 @@
                     jsApiList: ['onMenuShareTimeline', 'onMenuShareAppMessage']
                 });
                 wx.ready(function () {
-                 /*   wx.checkJsApi({
-                        jsApiList: [
-                            'getNetworkType',
-                            'previewImage'
-                        ],
-                        success: function (res) {
-                            // alert("checkJsApi=="+ JSON.stringify(res));
-                        }
-                    });*/
+                    /*   wx.checkJsApi({
+                           jsApiList: [
+                               'getNetworkType',
+                               'previewImage'
+                           ],
+                           success: function (res) {
+                               // alert("checkJsApi=="+ JSON.stringify(res));
+                           }
+                       });*/
                     wx.onMenuShareTimeline({
                         title: '{$share.share_title}', // 分享标题
                         link: s.url, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -76,73 +75,77 @@
             error: function () {
                 console.log("通信失败");
             }
-        }); 
+        });
     }
 
     //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
-layui.use(['element','layer','form','laydate'], function(){
-    console.log(getCurrentDate(2));
+    layui.use(['element', 'layer', 'form', 'laydate'], function () {
+        console.log(getCurrentDate(2));
 
-  var element = layui.element;
-  var layer = layui.layer;
-  var form = layui.form;
-  var laydate = layui.laydate;
-  var laydate1 = layui.laydate;
-  $(".fixed_button").click(function(){
-	    //console.log('发布行程');
-	    $(".backDiv").fadeIn();
-   });
-   $(".closeArea").click(function(){
-        $(".backDiv").fadeOut();
-   });
+        var element = layui.element;
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var laydate1 = layui.laydate;
+        $(".fixed_button").click(function () {
+            //console.log('发布行程');
+            $(".backDiv").fadeIn();
+        });
+        $(".closeArea").click(function () {
+            $(".backDiv").fadeOut();
+        });
 
-   $('.switchItem').click(function(){
-   	    //type  passenger-乘客  driver-司机
-        var type=$(this).attr('type');
-        console.log('type:',type);
-        //请求顺风车列表
-        //成功后添加activeItem 类
-        $(this).addClass('activeItem').siblings().removeClass('activeItem');
+        $('.switchItem').click(function () {
+            //type  passenger-乘客  driver-司机
+            var type = $(this).attr('type');
+            console.log('type:', type);
+            //请求顺风车列表
+            //成功后添加activeItem 类
+            $(this).addClass('activeItem').siblings().removeClass('activeItem');
 
-       var a = $('.switchItem').index(this);
+            var a = $('.switchItem').index(this);
 
-       $('.peopleList').each(function (i){
-           if(i==a){
-               if($(this).hasClass('status-list')){
-                   $(this).removeClass('status-list');
-               }
-           }else{
+            $('.peopleList').each(function (i) {
+                if (i == a) {
+                    // if($(this).hasClass('status-list')){
+                    //     $(this).removeClass('status-list');
+                    // }
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                    // $(this).addClass('status-list');
 
-               $(this).addClass('status-list');
+                }
+            })
 
-           }
-       })
-        
-   });
-   $('.form-switchItem').click(function(){
-   	    //type  passenger-乘客  driver-司机
-        var type = $('.layui-form').find('input[name="type"]');
-        var form_type=$(this).attr('type')=='driver'
-        ?type.val('passenger')&&$('.creat_form_item_left').hide().find('input[name="money"]').removeAttr('required  lay-verify')
-        :type.val('driver')&&$('.creat_form_item_left').show().find('input[name="money"]').attr({'required':true,'lay-verify':"required"});
-        console.log('form_type:',form_type); 
-        //请求顺风车列表
-        //成功后添加activeItem 类
-        $(this).addClass('activeItem').siblings().removeClass('activeItem');
-        
-   });
-   form.on('submit(formDemo)', function(data){
-       $.post('{:url("index/submit_tailwind")}',{datas:data.field},function(res){
-           console.log(res.msg)
-           // window.location.reload();
-           window.location.href='';
-       },function(res){
-           layer.msg(res);
-       })
-    // layer.msg(JSON.stringify(data.field));
-    console.log(data.field);
-    return false;
-  });
+        });
+        $('.form-switchItem').click(function () {
+            //type  passenger-乘客  driver-司机
+            var type = $('.layui-form').find('input[name="type"]');
+            var form_type = $(this).attr('type') == 'driver'
+                ? type.val('passenger') && $('.creat_form_item_left').hide().find('input[name="money"]').removeAttr('required  lay-verify')
+                : type.val('driver') && $('.creat_form_item_left').show().find('input[name="money"]').attr({
+                'required': true,
+                'lay-verify': "required"
+            });
+            console.log('form_type:', form_type);
+            //请求顺风车列表
+            //成功后添加activeItem 类
+            $(this).addClass('activeItem').siblings().removeClass('activeItem');
+
+        });
+        form.on('submit(formDemo)', function (data) {
+            $.post('{:url("index/submit_tailwind")}', {datas: data.field}, function (res) {
+                console.log(res.msg)
+                // window.location.reload();
+                window.location.href = '';
+            }, function (res) {
+                layer.msg(res);
+            })
+            // layer.msg(JSON.stringify(data.field));
+            console.log(data.field);
+            return false;
+        });
 //   layer.open({
 //         type: 1,
 //         title:'发布行程',
@@ -150,52 +153,52 @@ layui.use(['element','layer','form','laydate'], function(){
 //         area: ['95%', '90%'], //宽高
 //         content: 'html内容'
 //         });
-    $('.sedTrip').on('click',function(){
-        $('#exampleModal').modal('show');
-       
-    })
-    
-	/**
-	 *获取当前时间
-	 *format=1精确到天
-	 *format=2精确到分
-	*/
-	function getCurrentDate(format) {
-	  var now = new Date();
-	  var year = now.getFullYear(); //得到年份
-	  var month = now.getMonth();//得到月份
-	  var date = now.getDate();//得到日期
-	  var day = now.getDay();//得到周几
-	  var hour = now.getHours();//得到小时
-	  var minu = now.getMinutes();//得到分钟
-	  var sec = now.getSeconds();//得到秒
-	  month = month + 1;
-	  if (month < 10) month = "0" + month;
-	  if (date < 10) date = "0" + date;
-	  if (hour < 10) hour = "0" + hour;
-	  if (minu < 10) minu = "0" + minu;
-	  if (sec < 10) sec = "0" + sec;
-	  var time = "";
-	  //精确到天
-	  if(format==1){
-		time = year + "-" + month + "-" + date;
-	  }
-	  //精确到分
-	  else if(format==2){
-		time = year + "-" + month + "-" + date+ " " + hour + ":" + minu + ":" + sec;
-	  }
-	  return time;
-	} 
-});
+        $('.sedTrip').on('click', function () {
+            $('#exampleModal').modal('show');
 
-$(document).ready(function(){
-   
-});
+        })
+
+        /**
+         *获取当前时间
+         *format=1精确到天
+         *format=2精确到分
+         */
+        function getCurrentDate(format) {
+            var now = new Date();
+            var year = now.getFullYear(); //得到年份
+            var month = now.getMonth();//得到月份
+            var date = now.getDate();//得到日期
+            var day = now.getDay();//得到周几
+            var hour = now.getHours();//得到小时
+            var minu = now.getMinutes();//得到分钟
+            var sec = now.getSeconds();//得到秒
+            month = month + 1;
+            if (month < 10) month = "0" + month;
+            if (date < 10) date = "0" + date;
+            if (hour < 10) hour = "0" + hour;
+            if (minu < 10) minu = "0" + minu;
+            if (sec < 10) sec = "0" + sec;
+            var time = "";
+            //精确到天
+            if (format == 1) {
+                time = year + "-" + month + "-" + date;
+            }
+            //精确到分
+            else if (format == 2) {
+                time = year + "-" + month + "-" + date + " " + hour + ":" + minu + ":" + sec;
+            }
+            return time;
+        }
+    });
+
+    $(document).ready(function () {
+
+    });
 
 
 </script>
- 
- 
+
+
 </body>
 
 </html>
