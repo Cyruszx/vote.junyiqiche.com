@@ -22,7 +22,8 @@ class Index extends Frontend
     protected $noNeedLogin = '*';
     protected $noNeedRight = '*';
     protected $layout = '';
-    protected $model= '';
+    protected $model = '';
+
     public function _initialize()
     {
         parent::_initialize();
@@ -35,12 +36,13 @@ class Index extends Frontend
 
         $time = time();
 
-        $takeCarList = collection(RideSharing::field('id,starting_point,destination,starting_time,number_people,note,phone,money,type')
-            ->order('createtime desc')->select())->toArray();
-        $overdueId = [];
-        $driverList = [];
-        $passengerList = [];
+        if (Session::has('MEMBER')) {
+            $user_id = Session::get('MEMBER')['id'];
+        }
 
+        $takeCarList = collection(RideSharing::field('id,starting_point,destination,starting_time,number_people,note,phone,money,type,user_id')
+            ->order('createtime desc')->select())->toArray();
+        $driverList = $passengerList = $overdueId = $userDriver = $userPassenger = [];
         foreach ($takeCarList as $k => $v) {
 
 //            if ($time > $v['starting_time']) {
@@ -50,37 +52,58 @@ class Index extends Frontend
 //            } else {
 //                $v['starting_time'] = date('m-d H:i',$v['starting_time']);
 
-                if($v['type']=='driver'){
-                    unset($v['type']);
-                    $driverList[] = $v;
-                }else{
-                    unset($v['money'],$v['type']);
-                    $passengerList[] = $v;
+            if ($v['type'] == 'driver') {
+
+                if (!empty($user_id)) {
+                     if($user_id==$v['user_id']){
+                         unset($v['type'],$v['user_id']);
+                         $userDriver[] = $v;
+                         continue;
+                     }
                 }
+                unset($v['type'],$v['user_id']);
+
+                $driverList[] = $v;
+            } else {
+
+
+                if (!empty($user_id)) {
+                    if($user_id==$v['user_id']){
+                        unset($v['money'], $v['type'],$v['user_id']);
+                        $userPassenger[] = $v;
+                        continue;
+                    }
+                }
+                unset($v['money'], $v['type'],$v['user_id']);
+                $passengerList[] = $v;
+            }
 
 //            }
 
         }
 
+        $driverList = array_merge($userDriver,$driverList);
+        $passengerList = array_merge($userPassenger,$passengerList);
 //        if ($overdueId) {
 //            RideSharing::where('id', 'in', $overdueId)->update(['status' => 'hidden']);
 //        }
-
+//pr($driverList);
+//pr($passengerList);die();
         $shares = Db::name('config')
-        ->where('group','share')
-        ->field('name,value')
-        ->select();
+            ->where('group', 'share')
+            ->field('name,value')
+            ->select();
 
         $share = [];
 
-        foreach ($shares as $k=>$v){
+        foreach ($shares as $k => $v) {
             $share[$v['name']] = $v['value'];
         }
 
         $this->view->assign([
-            'driverList'=>$driverList,
-            'passengerList'=>$passengerList,
-            'share'=>$share
+            'driverList' => $driverList,
+            'passengerList' => $passengerList,
+            'share' => $share
         ]);
 //        pr($driverList);
         //查询config表分享配置一起assign出去
@@ -164,18 +187,16 @@ class Index extends Frontend
     }
 
 
-
-
     /**
      *司机发布顺风车接口
      */
     public function submit_tailwind()
     {
-        if($this->request->isAjax()){ 
-           
-            $data = $this->request->post('datas/a'); 
-            $res = $this->model->allowField(true)->save($data)?$this->success('发布成功', 'success'):$this->error('发布成功', 'error');
-        } 
+        if ($this->request->isAjax()) {
+
+            $data = $this->request->post('datas/a');
+            $res = $this->model->allowField(true)->save($data) ? $this->success('发布成功', 'success') : $this->error('发布成功', 'error');
+        }
 
     }
 
@@ -219,7 +240,6 @@ class Index extends Frontend
 
         $this->success('请求成功', ['takeCarList' => $takeCar]);
     }
-
 
 
 }

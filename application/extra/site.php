@@ -39,7 +39,7 @@ return array (
   'mail_from' => '10000@qq.com',
   'block_img' => '/uploads/20190131/2c9d5a7a841b34e6ea89fcf3cb5cce4e.jpg',
   'block_switch' => '1',
-  'share_title' => '',
-  'share_content' => '',
+  'share_title' => '卡片标题',
+  'share_content' => '卡片内容',
   'share_image' => '',
 );
