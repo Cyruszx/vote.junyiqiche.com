@@ -15,7 +15,6 @@ use think\Db;
 use think\Session;
 use think\Config;
 use think\Request;
-use think\R;
 
 class Index extends Frontend
 {
