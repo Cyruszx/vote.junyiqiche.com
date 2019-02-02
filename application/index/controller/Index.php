@@ -39,7 +39,7 @@ class Index extends Frontend
         if (Session::has('MEMBER')) {
             $user_id = Session::get('MEMBER')['id'];
         }
-
+        $user_id = 3;
         $takeCarList = collection(RideSharing::field('id,starting_point,destination,starting_time,number_people,note,phone,money,type,user_id')
             ->order('createtime desc')->select())->toArray();
         $driverList = $passengerList = $overdueId = $userDriver = $userPassenger = [];
@@ -56,9 +56,12 @@ class Index extends Frontend
 
                 if (!empty($user_id)) {
                      if($user_id==$v['user_id']){
-                         unset($v['type'],$v['user_id']);
-                         $userDriver[] = $v;
-                         continue;
+                         if(count($userDriver)<=4){
+                             unset($v['type'],$v['user_id']);
+                             $userDriver[] = $v;
+                             continue;
+                         }
+
                      }
                 }
                 unset($v['type'],$v['user_id']);
@@ -66,12 +69,13 @@ class Index extends Frontend
                 $driverList[] = $v;
             } else {
 
-
                 if (!empty($user_id)) {
                     if($user_id==$v['user_id']){
-                        unset($v['money'], $v['type'],$v['user_id']);
-                        $userPassenger[] = $v;
-                        continue;
+                        if(count($userPassenger)<=4) {
+                            unset($v['money'], $v['type'], $v['user_id']);
+                            $userPassenger[] = $v;
+                            continue;
+                        }
                     }
                 }
                 unset($v['money'], $v['type'],$v['user_id']);
